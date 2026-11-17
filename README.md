@@ -20,7 +20,9 @@ Sesuai dengan ketentuan tugas, aplikasi ini mencakup 5 elemen utama GUI:
 * **`JLabel`**: Menampilkan teks informasi seperti judul label form (*Nama*, *NIM*, *Nilai Angka*) dan status bar di bagian bawah.
 * **`JTextField`**: Kotak input teks satu baris untuk memasukkan data Nama, NIM, dan Nilai Angka mahasiswa.
 * **`JButton`**: Tombol interaktif untuk mengeksekusi aksi (`Proses Nilai` dan `Reset Form`).
-* **`JTextArea`**: Area teks multi-baris yang bersifat *read-only* untuk menampilkan riwayat hasil perhitungan huruf mutu dan status kelulusan.
+* **`JTextArea`**: Area teks multi-baris yang bersifat *read-only* untuk menampilkan riwayat hasil 
+* **`JComboBox`**: Digunakan untuk pilihan dropdown Program Studi.
+perhitungan huruf mutu dan status kelulusan.
 
 ### 4. Layout Manager
 * **`BorderLayout`**: Digunakan pada `JFrame` utama untuk membagi tata letak menjadi 3 bagian: `NORTH` (Form Input), `CENTER` (Riwayat Output), dan `SOUTH` (Status Bar).

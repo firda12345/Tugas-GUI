@@ -1,31 +1,38 @@
 import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
 
-public class MainFrame extends JFrame implements java.awt.event.ActionListener, java.awt.event.MouseListener {
+public class MainFrame extends JFrame implements ActionListener, MouseListener {
 
     private JTextField txtNama;
     private JTextField txtNIM;
     private JTextField txtNilai;
+    private JComboBox<String> cmbProdi; // Komponen atomic baru (Dropdown)
     private JButton btnProses, btnReset;
     private JTextArea txtOutput;
     private JLabel lblStatus;
 
     public MainFrame() {
         setTitle("Aplikasi Cek Nilai & Status Kelulusan Mahasiswa");
-        setSize(600, 500);
+        setSize(600, 530);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null); // Center window
         setLayout(new BorderLayout(10, 10));
 
-        JPanel panelForm = new JPanel(new GridLayout(4, 2, 8, 8));
-
+        // Intermediate Container: JPanel dengan GridLayout (5 baris, 2 kolom)
+        JPanel panelForm = new JPanel(new GridLayout(5, 2, 8, 8));
         panelForm.setBorder(BorderFactory.createEmptyBorder(15, 15, 5, 15));
 
+        // Atomic Components
         JLabel lblNama = new JLabel("Nama Mahasiswa:");
         txtNama = new JTextField();
 
         JLabel lblNIM = new JLabel("NIM:");
         txtNIM = new JTextField();
+
+        JLabel lblProdi = new JLabel("Program Studi:");
+        String[] daftarProdi = {"Teknik Informatika", "Sistem Informasi", "Ilmu Komputer"};
+        cmbProdi = new JComboBox<>(daftarProdi);
 
         JLabel lblNilai = new JLabel("Nilai Angka (0-100):");
         txtNilai = new JTextField();
@@ -33,15 +40,19 @@ public class MainFrame extends JFrame implements java.awt.event.ActionListener, 
         btnProses = new JButton("Proses Nilai");
         btnReset = new JButton("Reset Form");
 
+        // Menambahkan komponen ke panel form
         panelForm.add(lblNama);
         panelForm.add(txtNama);
         panelForm.add(lblNIM);
         panelForm.add(txtNIM);
+        panelForm.add(lblProdi);
+        panelForm.add(cmbProdi);
         panelForm.add(lblNilai);
         panelForm.add(txtNilai);
         panelForm.add(btnProses);
         panelForm.add(btnReset);
 
+        // Intermediate Container: JScrollPane & JTextArea
         txtOutput = new JTextArea();
         txtOutput.setEditable(false);
         JScrollPane scrollPane = new JScrollPane(txtOutput);
@@ -50,22 +61,35 @@ public class MainFrame extends JFrame implements java.awt.event.ActionListener, 
         lblStatus = new JLabel(" Status: Ready");
         lblStatus.setPreferredSize(new Dimension(getWidth(), 25));
 
+        // Layout Manager Utama: BorderLayout
         add(panelForm, BorderLayout.NORTH);
         add(scrollPane, BorderLayout.CENTER);
         add(lblStatus, BorderLayout.SOUTH);
 
+        // Event Handling: ActionListener & MouseListener
         btnProses.addActionListener(this);
         btnReset.addActionListener(this);
 
         btnProses.addMouseListener(this);
         btnReset.addMouseListener(this);
+
+        // Tambahan Event Adapter (KeyAdapter) untuk kemudahan input via Enter
+        txtNilai.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    btnProses.doClick(); // Memicu tombol proses ketika Enter ditekan
+                }
+            }
+        });
     }
 
     @Override
-    public void actionPerformed(java.awt.event.ActionEvent e) {
+    public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnProses) {
             String nama = txtNama.getText().trim();
             String nim = txtNIM.getText().trim();
+            String prodi = (String) cmbProdi.getSelectedItem();
             String strNilai = txtNilai.getText().trim();
 
             if (nama.isEmpty() || nim.isEmpty() || strNilai.isEmpty()) {
@@ -100,7 +124,7 @@ public class MainFrame extends JFrame implements java.awt.event.ActionListener, 
                     status = "TIDAK LULUS";
                 }
 
-                txtOutput.append("NIM: " + nim + " | Nama: " + nama + "\n");
+                txtOutput.append("NIM: " + nim + " | Nama: " + nama + " | Prodi: " + prodi + "\n");
                 txtOutput.append("-> Nilai Angka: " + nilai + " | Huruf Mutu: " + hurufMutu + " | Status: " + status + "\n");
                 txtOutput.append("--------------------------------------------------------------------------\n");
 
@@ -120,12 +144,13 @@ public class MainFrame extends JFrame implements java.awt.event.ActionListener, 
 
     private void clearForm() {
         txtNama.setText("");
-        txtNIM.setText("");
+        txtNIM.setText(""); 
         txtNilai.setText("");
+        cmbProdi.setSelectedIndex(0);
     }
 
     @Override
-    public void mouseEntered(java.awt.event.MouseEvent e) {
+    public void mouseEntered(MouseEvent e) {
         if (e.getSource() == btnProses) {
             lblStatus.setText(" Status: Kursor berada di atas tombol Proses Nilai");
         } else if (e.getSource() == btnReset) {
@@ -134,16 +159,16 @@ public class MainFrame extends JFrame implements java.awt.event.ActionListener, 
     }
 
     @Override
-    public void mouseExited(java.awt.event.MouseEvent e) {
+    public void mouseExited(MouseEvent e) {
         lblStatus.setText(" Status: Ready");
     }
 
     @Override
-    public void mouseClicked(java.awt.event.MouseEvent e) {}
+    public void mouseClicked(MouseEvent e) {}
     @Override
-    public void mousePressed(java.awt.event.MouseEvent e) {}
+    public void mousePressed(MouseEvent e) {}
     @Override
-    public void mouseReleased(java.awt.event.MouseEvent e) {}
+    public void mouseReleased(MouseEvent e) {}
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
